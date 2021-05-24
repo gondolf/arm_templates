@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "projectName": {
+      "value": "geewebsite"
+    },
+    "correlative": {
+      "value": "102"
+    },
+    "adminUsername": {
+      "value": "azureuser"
+    },
+    "existingvirtualNetworkName": {
+      "value": "vnet01"
+    },
+    "existingresourcegroupVirtualNetwork": {
+      "value": "arsgrinfp01"
+    },
+    "subnetName": {
+      "value": "subnet01"
+    },
+    "existingStorageAccountName": {
+      "value": "diagsrsgrwebsite001"
+    },
+    "adminPasswordOrKey": {
+      "value": "Password$$$01"
+    }
+  }
+}
