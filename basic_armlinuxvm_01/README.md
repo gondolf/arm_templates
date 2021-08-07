@@ -9,4 +9,4 @@ ARM Template Deployment
 ARM Template parameters
 
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Ffappgee01.azurewebsites.net%2Fapi%2FGitHubPrivateRepoFileFetcher%3Fgithuburi%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgondolf%2Farm_templates%2Fmaster%2Fazuredeploy.json%3E%26githubaccesstoken%3D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)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Ffappgee01.azurewebsites.net%2Fapi%2FGitHubPrivateRepoFileFetcher%3Fgithuburi%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2Fgondolf%2Farm_templates%2Fmaster%2Fbasic_armlinuxvm_01%2Fazuredeploy.json%26githubaccesstoken%3D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)
