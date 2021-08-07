@@ -102,7 +102,7 @@
             "defaultValue": ""
         }
     },
-    "variables": {
+    "variables": {       
         "imagePublisher": "Canonical",
         "imageOffer": "UbuntuServer",
         "nicName": "[concat('aznic', parameters('projectname'),parameters('Correlative'))]",
