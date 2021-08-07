@@ -1,9 +1,11 @@
-basic_armlinuxvm
+# Basic_armlinuxvm
+Use this template to deploy basic website running in azure vm over ubuntu
+This template use DSC extension to include disk partitioning and apache service installation as part of the deployment.
 
-# [azuredeploy] (azuredeploy.json)
+# [azuredeploy](azuredeploy.json)
 ARM Template Deployment
 
-# [azuredeploy.parameters] (azuredeploy.parameters.json)
+# [azuredeploy.parameters](azuredeploy.parameters.json)
 ARM Template parameters
 
 
