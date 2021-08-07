@@ -1,9 +1,9 @@
 # basic_armlinuxvm
 
-## [azuredeploy] (azuredeploy.json)
+## [azuredeploy](azuredeploy.json)
 ARM Template Deployment
 
-## [azuredeploy.parameters] (azuredeploy.parameters.json)
+## [azuredeploy.parameters](azuredeploy.parameters.json)
 ARM Template parameters
 
 
