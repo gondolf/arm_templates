@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VMName": {
+        "value": "gedc0"
+      },
+      "correlative": {
+        "value": "01"
+      },
+      "adminUsername": {
+        "value": "kndadmin"
+      },
+      "existingvirtualNetworkName": {
+        "value": "avnetyeceu1hub01"
+      },
+      "existingresourcegroupVirtualNetwork": {
+        "value": "arsgrinfeu1p01"
+      },
+      "existingsubnetName": {
+        "value": "asnetsvchub01"
+      },
+      "existingStorageAccountName": {
+        "value": "vdiagyecinfeu1prd02"
+      },
+      "adminPasswordOrKey": {
+        "value": "Password$$$01"
+      },
+      "NumbOfInstances":{
+        "value": 1
+      }
+    }
+  }
