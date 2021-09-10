@@ -181,7 +181,7 @@
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[variables('vmName')]",
+                    "computerName": "[concat(parameters('vmName'),copyIndex(1))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
@@ -193,14 +193,14 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(variables('vmName'),'_OSDisk')]",
+                        "name": "[concat(parameters('vmName'),copyIndex(1), '_OSDisk')]",
                         "managedDisk": { "storageAccountType": "Standard_LRS" },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(variables('vmName'),'_DataDisk_',copyIndex())]",
+                            "name": "[concat(parameters('vmName'),copyIndex(1),'_DataDisk_',copyIndex())]",
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
