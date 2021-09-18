@@ -2,13 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": {
-            "type": "string",
-            "metadata": {
-                "description": "Prefix for the environment (2-5 characters)"
-            },
-            "defaultValue": "prd01"
-        },
         "VMName": {
             "type": "string",
             "metadata": {
@@ -33,7 +26,7 @@
                 "description": "Existing Subnet to which the VM will connect."
             }
         },
-        "existingStorageAccountName": {
+        "existingBootDiagnostic": {
             "type": "string",
             "metadata": {
                 "description": "The name of an existing storage account to which diagnostics data is transfered."
@@ -94,6 +87,13 @@
                 "description": "Location for all resources."
             }
         },
+        "DataDiskSize": {
+            "type": "int",
+            "defaultValue": 128,
+            "metadata": {
+                "description": "The size for the first data disk"
+            }
+        },
         "adminPasswordOrKey": {
             "type": "securestring",
             "metadata": {
@@ -106,7 +106,6 @@
         "imageOffer": "WindowsServer",
         "nicName": "[tolower(concat('aznic', parameters('VMName')))]",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
-        "AvailabilitySetName": "[concat('avset',parameters('VMName'),parameters('environment'))]",
         "blobStorageEndpoint": "blob.core.windows.net"
     },
 
@@ -121,15 +120,15 @@
                 "count": "[parameters('NumbOfInstances')]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('AvailabilitySetName'))]"
+
             ],
             "properties": {
-                "enableAcceleratedNetworking": false,
+                "enableAcceleratedNetworking": true,
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
+                            "privateIPAllocationMethod": "dynamic",
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             }
@@ -140,42 +139,24 @@
         },
         {
             "apiVersion": "2020-12-01",
-            "type": "Microsoft.Compute/availabilitySets",
-            "location": "[parameters('location')]",
-            "name": "[variables('AvailabilitySetName')]",
-            "properties": {
-                "PlatformUpdateDomainCount": 20,
-                "PlatformFaultDomainCount": 2
-            },
-            "tags": {
-                "displayName": "SrvAvailabilitySet"
-            },
-            "sku": {
-                "name": "Aligned"
-            }
-        },
-        {
-            "apiVersion": "2020-12-01",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('vmName'), copyIndex(1))]",
+            "name": "[concat(parameters('vmName'))]",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "SrvMachineLoop",
                 "count": "[parameters('NumbOfInstances')]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/availabilitySets', variables('AvailabilitySetName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),copyIndex(1)))]"
             ],
             "properties": {
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('AvailabilitySetName'))]"
-                },
+
                 "licenseType": "Windows_Server",
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('vmName'),copyIndex(1))]",
+                    "computerName": "[concat(parameters('vmName'))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
@@ -187,18 +168,18 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('vmName'),copyIndex(1), '_OSDisk')]",
+                        "name": "[concat(parameters('vmName'), '_OSDisk')]",
                         "managedDisk": { "storageAccountType": "StandardSSD_LRS" },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('vmName'),copyIndex(1),'_DataDisk_',copyIndex())]",
+                            "name": "[concat(parameters('vmName'),'_DataDisk_',copyIndex())]",
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
-                            "diskSizeGB": 64,
+                            "diskSizeGB": "[parameters('DataDiskSize')]",
                             "lun": 0,
                             "createOption": "Empty"
                         }
@@ -214,7 +195,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[concat('http://',parameters('existingStorageAccountName'),'.',variables('blobStorageEndpoint'))]"
+                        "storageUri": "[concat('http://',parameters('existingBootDiagnostic'),'.',variables('blobStorageEndpoint'))]"
                     }
                 }
             }
