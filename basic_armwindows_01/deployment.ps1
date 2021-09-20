@@ -16,7 +16,7 @@ function Login($SubscriptionId) {
         Write-Output " Authenticated in tenant: $($context.Tenant.Id)"
     } 
     else {
-        Write-Host "SubscriptionId '$SubscriptionId' already connected"
+        Write-Output "SubscriptionId '$SubscriptionId' already connected"
     }
 }
 
