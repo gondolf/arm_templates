@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "environment": {
+            "type": "string",
+            "metadata": {
+                "description": "Prefix for the environment (2-5 characters)"
+            },
+            "defaultValue": "prd01"
+        },
         "VMName": {
             "type": "string",
             "metadata": {
@@ -55,8 +62,15 @@
             "metadata": {
                 "description": "Size of the virtual machine"
             },
-            "defaultValue": "Standard_F2s_v2"
+            "defaultValue": "Standard_B1ls"
         },
+        "DataDiskSize": {
+            "type": "int",
+            "metadata": {
+                "description": "Size of the virtual machine"
+            },
+            "defaultValue": 128
+        },        
         "NumbOfInstances": {
             "type": "int",
             "metadata": {
@@ -66,7 +80,7 @@
                 1,
                 2
             ],
-            "defaultValue": 2
+            "defaultValue": 1
         },
         "diskType": {
             "type": "string",
@@ -87,13 +101,6 @@
                 "description": "Location for all resources."
             }
         },
-        "DataDiskSize": {
-            "type": "int",
-            "defaultValue": 128,
-            "metadata": {
-                "description": "The size for the first data disk"
-            }
-        },
         "adminPasswordOrKey": {
             "type": "securestring",
             "metadata": {
@@ -104,8 +111,10 @@
     "variables": {
         "imagePublisher": "MicrosoftWindowsServer",
         "imageOffer": "WindowsServer",
-        "nicName": "[tolower(concat('aznic', parameters('VMName')))]",
+        "nicName": "[concat('aznic', parameters('VMName'))]",
+        "vmName": "[concat('lnx', parameters('VMName'))]",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
+        "AvailabilitySetName": "[concat(parameters('environment'),parameters('VMName'))]",
         "blobStorageEndpoint": "blob.core.windows.net"
     },
 
@@ -123,7 +132,7 @@
 
             ],
             "properties": {
-                "enableAcceleratedNetworking": true,
+                "enableAcceleratedNetworking": false,
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
@@ -148,9 +157,11 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),copyIndex(1)))]"
-            ],
+            ],            
             "properties": {
-
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('AvailabilitySetName'))]"
+                },
                 "licenseType": "Windows_Server",
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
@@ -179,7 +190,7 @@
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
-                            "diskSizeGB": "[parameters('DataDiskSize')]",
+                            "diskSizeGB": 128,
                             "lun": 0,
                             "createOption": "Empty"
                         }
@@ -202,5 +213,6 @@
         }
     ],
     "outputs": {
+
     }
 }

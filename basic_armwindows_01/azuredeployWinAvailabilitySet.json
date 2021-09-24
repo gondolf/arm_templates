@@ -5,7 +5,7 @@
         "VMName": {
             "type": "string",
             "metadata": {
-                "description": "Virtual Machine Name"
+                "description": "Storage Account type by default is standrad_lrs"
             }
         },
         "existingvirtualNetworkName": {
