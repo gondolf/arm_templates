@@ -3,7 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "VMName": {
-      "value": "add-prd-db-ec"
+      "value": [
+        "server01",
+        "server02"
+      ]
     },
     "adminUsername": {
       "value": "kndadmin"
@@ -18,22 +21,25 @@
       "value": "asnetappprd01"
     },
     "existingBootDiagnostic": {
-      "value": "vdiagyecaddeu1prd01"
+      "value": "vdiagyecj6eu1prd02"
     },
     "adminPasswordOrKey": {
       "value": "DY3ytqZ3wmiCLJh7"
     },
     "NumbOfInstances": {
-      "value": 1
+      "value": 2
     },
     "diskType": {
       "value": "StandardSSD_LRS"
     },
     "vmSize": {
-      "value": "Standard_F2s_v2"
+      "value": "Standard_B2s"
     },
     "DataDiskSize": {
       "value": 128
-    }
+    },
+    "AvailabilitySetName": {
+      "value": "MyAvailabilitySet"
+    }    
   }
 }

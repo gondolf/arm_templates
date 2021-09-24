@@ -2,15 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": {
-            "type": "string",
-            "metadata": {
-                "description": "Prefix for the environment (2-5 characters)"
-            },
-            "defaultValue": "prd01"
-        },
         "VMName": {
-            "type": "string",
+            "type": "array",
             "metadata": {
                 "description": "Virtual Machine Name"
             }
@@ -70,7 +63,7 @@
                 "description": "Size of the virtual machine"
             },
             "defaultValue": 128
-        },        
+        },
         "NumbOfInstances": {
             "type": "int",
             "metadata": {
@@ -101,6 +94,13 @@
                 "description": "Location for all resources."
             }
         },
+        "AvailabilitySetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Availability Set Name"
+            },
+            "defaultValue": "MyAvailabilitySet"
+        },   
         "adminPasswordOrKey": {
             "type": "securestring",
             "metadata": {
@@ -111,22 +111,34 @@
     "variables": {
         "imagePublisher": "MicrosoftWindowsServer",
         "imageOffer": "WindowsServer",
-        "nicName": "[concat('aznic', parameters('VMName'))]",
-        "vmName": "[concat('lnx', parameters('VMName'))]",
+        "nicNameprefix": "aznic",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
-        "AvailabilitySetName": "[concat(parameters('environment'),parameters('VMName'))]",
         "blobStorageEndpoint": "blob.core.windows.net"
     },
 
     "resources": [
         {
-            "apiVersion": "2020-05-01",
-            "name": "[concat(variables('nicName'),copyIndex(1))]",
+            "type": "Microsoft.Compute/availabilitySets",
+            "name": "[parameters('AvailabilitySetName')]",
+            "apiVersion": "2020-12-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "platformFaultDomainCount": 2,
+                "platformUpdateDomainCount": 5
+            },
+            "sku": {
+                "name": "Aligned"
+            }
+        },
+
+        {
+            "apiVersion": "2020-11-01",
+            "name": "[toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()]))]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "nicLoop",
-                "count": "[parameters('NumbOfInstances')]"
+                "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
 
@@ -149,25 +161,24 @@
         {
             "apiVersion": "2020-12-01",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('vmName'))]",
+            "name": "[concat(parameters('vmName')[copyIndex()])]",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "SrvMachineLoop",
-                "count": "[parameters('NumbOfInstances')]"
+                "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),copyIndex(1)))]"
-            ],            
+                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()]))]"
+            ],
             "properties": {
                 "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('AvailabilitySetName'))]"
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets',parameters('AvailabilitySetName'))]"
                 },
-                "licenseType": "Windows_Server",
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('vmName'))]",
+                    "computerName": "[concat(parameters('vmName')[copyIndex()])]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
@@ -179,18 +190,18 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('vmName'), '_OSDisk')]",
-                        "managedDisk": { "storageAccountType": "StandardSSD_LRS" },
+                        "name": "[concat(parameters('vmName')[copyIndex()],'_OSDisk')]",
+                        "managedDisk": { "storageAccountType": "Standard_LRS" },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('vmName'),'_DataDisk_',copyIndex())]",
+                            "name": "[concat(parameters('vmName')[copyIndex()],'_DataDisk_',copyIndex())]",
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
-                            "diskSizeGB": 128,
+                            "diskSizeGB": "[parameters('DataDiskSize')]",
                             "lun": 0,
                             "createOption": "Empty"
                         }
@@ -199,7 +210,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),copyIndex(1)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()])))]"
                         }
                     ]
                 },
