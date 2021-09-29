@@ -3,9 +3,9 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "VMName": {
-            "type": "string",
+            "type": "array",
             "metadata": {
-                "description": "Storage Account type by default is standrad_lrs"
+                "description": "Virtual Machine Name"
             }
         },
         "existingvirtualNetworkName": {
@@ -55,18 +55,14 @@
             "metadata": {
                 "description": "Size of the virtual machine"
             },
-            "defaultValue": "Standard_F2s_v2"
+            "defaultValue": "Standard_B1ls"
         },
-        "NumbOfInstances": {
+        "DataDiskSize": {
             "type": "int",
             "metadata": {
-                "description": "Number of Web Servers"
+                "description": "Size of the virtual machine"
             },
-            "allowedValues": [
-                1,
-                2
-            ],
-            "defaultValue": 2
+            "defaultValue": 128
         },
         "diskType": {
             "type": "string",
@@ -87,12 +83,12 @@
                 "description": "Location for all resources."
             }
         },
-        "DataDiskSize": {
-            "type": "int",
-            "defaultValue": 128,
+        "AvailabilitySetName": {
+            "type": "string",
             "metadata": {
-                "description": "The size for the first data disk"
-            }
+                "description": "Availability Set Name"
+            },
+            "defaultValue": "MyAvailabilitySet"
         },
         "adminPasswordOrKey": {
             "type": "securestring",
@@ -104,26 +100,26 @@
     "variables": {
         "imagePublisher": "MicrosoftWindowsServer",
         "imageOffer": "WindowsServer",
-        "nicName": "[tolower(concat('aznic', parameters('VMName')))]",
+        "nicNameprefix": "aznic",
+        "correlative": "01",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
         "blobStorageEndpoint": "blob.core.windows.net"
     },
-
     "resources": [
         {
-            "apiVersion": "2020-05-01",
-            "name": "[concat(variables('nicName'),copyIndex(1))]",
+            "apiVersion": "2020-11-01",
+            "name": "[toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative')))]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "nicLoop",
-                "count": "[parameters('NumbOfInstances')]"
+                "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
 
             ],
             "properties": {
-                "enableAcceleratedNetworking": true,
+                "enableAcceleratedNetworking": false,
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
@@ -138,25 +134,27 @@
             }
         },
         {
-            "apiVersion": "2020-12-01",
+            "apiVersion": "2021-03-01",
             "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat(parameters('vmName'))]",
+            "name": "[concat(parameters('vmName')[copyIndex()])]",
             "location": "[parameters('location')]",
             "copy": {
                 "name": "SrvMachineLoop",
-                "count": "[parameters('NumbOfInstances')]"
+                "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'),copyIndex(1)))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative')))]"
             ],
             "properties": {
-
-                "licenseType": "Windows_Server",
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/AvailabilitySets',parameters('AvailabilitySetName'))]"
+                },
+   
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(parameters('vmName'))]",
+                    "computerName": "[concat(parameters('vmName')[copyIndex()])]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPasswordOrKey')]"
                 },
@@ -168,14 +166,14 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('vmName'), '_OSDisk')]",
-                        "managedDisk": { "storageAccountType": "StandardSSD_LRS" },
+                        "name": "[concat(parameters('vmName')[copyIndex()],'_OSDisk')]",
+                        "managedDisk": { "storageAccountType": "Standard_LRS" },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('vmName'),'_DataDisk_',copyIndex())]",
+                            "name": "[concat(parameters('vmName')[copyIndex()],'_DataDisk_',copyIndex())]",
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
@@ -188,7 +186,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('nicName'),copyIndex(1)))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative'))))]"
                         }
                     ]
                 },
@@ -202,5 +200,6 @@
         }
     ],
     "outputs": {
+
     }
 }

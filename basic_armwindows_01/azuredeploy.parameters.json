@@ -4,8 +4,7 @@
   "parameters": {
     "VMName": {
       "value": [
-        "server01",
-        "server02"
+        "j6-prd-web4-ec"
       ]
     },
     "adminUsername": {
@@ -18,28 +17,25 @@
       "value": "arsgrinfeu1p01"
     },
     "existingsubnetName": {
-      "value": "asnetappprd01"
+      "value": "asnetwebprd01"
     },
     "existingBootDiagnostic": {
-      "value": "vdiagyecj6eu1prd02"
+      "value": "vdiagyecj6eu1prd01"
     },
     "adminPasswordOrKey": {
       "value": "DY3ytqZ3wmiCLJh7"
-    },
-    "NumbOfInstances": {
-      "value": 2
     },
     "diskType": {
       "value": "StandardSSD_LRS"
     },
     "vmSize": {
-      "value": "Standard_B2s"
+      "value": "Standard_D8s_v4"
     },
     "DataDiskSize": {
       "value": 128
     },
     "AvailabilitySetName": {
-      "value": "MyAvailabilitySet"
-    }    
+      "value": "avsetyecwj6prd01"
+    }
   }
 }

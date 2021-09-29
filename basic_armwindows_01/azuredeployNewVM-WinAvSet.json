@@ -64,17 +64,6 @@
             },
             "defaultValue": 128
         },
-        "NumbOfInstances": {
-            "type": "int",
-            "metadata": {
-                "description": "Number of Web Servers"
-            },
-            "allowedValues": [
-                1,
-                2
-            ],
-            "defaultValue": 1
-        },
         "diskType": {
             "type": "string",
             "allowedValues": [
@@ -112,6 +101,7 @@
         "imagePublisher": "MicrosoftWindowsServer",
         "imageOffer": "WindowsServer",
         "nicNameprefix": "aznic",
+        "correlative": "01",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
         "blobStorageEndpoint": "blob.core.windows.net"
     },
@@ -123,7 +113,7 @@
             "apiVersion": "2020-12-01",
             "location": "[parameters('location')]",
             "properties": {
-                "platformFaultDomainCount": 2,
+                "platformFaultDomainCount": 3,
                 "platformUpdateDomainCount": 5
             },
             "sku": {
@@ -133,7 +123,7 @@
 
         {
             "apiVersion": "2020-11-01",
-            "name": "[toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()]))]",
+            "name": "[toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative')))]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[parameters('location')]",
             "copy": {
@@ -141,10 +131,10 @@
                 "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
-
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('AvailabilitySetName'))]"
             ],
             "properties": {
-                "enableAcceleratedNetworking": false,
+                "enableAcceleratedNetworking": true,
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
@@ -168,7 +158,7 @@
                 "count": "[length(parameters('VMName'))]"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()]))]"
+                "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative')))]"
             ],
             "properties": {
                 "availabilitySet": {
@@ -197,7 +187,7 @@
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('vmName')[copyIndex()],'_DataDisk_',copyIndex())]",
+                            "name": "[concat(parameters('vmName')[copyIndex()],'_DataDisk_',variables('correlative'))]",
                             "managedDisk": {
                                 "storageAccountType": "[parameters('diskType')]"
                             },
@@ -210,7 +200,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()])))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', toLower(concat(variables('nicNameprefix'),parameters('VMName')[copyIndex()],variables('correlative'))))]"
                         }
                     ]
                 },
