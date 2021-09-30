@@ -36,16 +36,16 @@
          "value": "Standard_D2s_v3"
       },
       "domainName":{  
-         "value":"alwayson.local"
+         "value":"myalwayson.local"
       },
       "virtualNetworkAddressRange":{  
-         "value":"10.0.0.0/16"
+         "value":"172.20.0.0/21"
       },
       "staticSubnet":{  
-         "value":"10.0.0.0/24"
+         "value":"172.20.0.0/24"
       },
       "sqlSubnet":{  
-         "value":"10.0.1.0/26"
+         "value":"172.20.1.0/26"
       },
       "autoPatchingDay":{  
          "value":"Sunday"
