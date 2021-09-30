@@ -21,10 +21,10 @@
          "value":"Standard_LRS"
       },
       "sqlStorageAccountName":{  
-         "value":"GEN-UNIQUE"
+         "value":"staccgeedb01"
       },
       "dcStorageAccountName":{  
-         "value":"GEN-UNIQUE"
+         "value":"staccgeedc01"
       },
       "adVMSize":{  
          "value": "Standard_D2s_v3"
@@ -36,7 +36,7 @@
          "value": "Standard_D2s_v3"
       },
       "domainName":{  
-         "value":"myalwayson.local"
+         "value":"geealwayson.local"
       },
       "virtualNetworkAddressRange":{  
          "value":"172.20.0.0/21"
