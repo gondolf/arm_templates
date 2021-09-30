@@ -6,13 +6,13 @@
          "value":"alwaysonadmin"
       },
       "adminPassword":{  
-         "value":"GEN-PASSWORD"
+         "value":"LetsTrythisP@ss2021"
       },
       "sqlServerServiceAccountUserName":{  
          "value":"sqlservice"
       },
       "sqlServerServiceAccountPassword":{  
-         "value":"GEN-PASSWORD"
+         "value":"LetsTrythisP@ss2021"
       },
       "sqlStorageAccountType":{  
          "value":"Premium_LRS"
