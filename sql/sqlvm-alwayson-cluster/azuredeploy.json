@@ -95,42 +95,42 @@
       "metadata": {
         "description": "The address range of the new VNET in CIDR format"
       },
-      "defaultValue": "10.0.0.0/16"
+      "defaultValue": "172.20.0.0/16"
     },
     "staticSubnet": {
       "type": "string",
       "metadata": {
         "description": "The address range of the subnet static IPs are allocated from in the new VNET"
       },
-      "defaultValue": "10.0.0.0/24"
+      "defaultValue": "172.20.0.0/24"
     },
     "sqlSubnet": {
       "type": "string",
       "metadata": {
         "description": "The address range of the SQL subnet created in the new VNET"
       },
-      "defaultValue": "10.0.1.0/26"
+      "defaultValue": "172.20.1.0/26"
     },
     "adPDCNICIPAddress": {
       "type": "string",
       "metadata": {
         "description": "The IP address of the new AD VM"
       },
-      "defaultValue": "10.0.0.4"
+      "defaultValue": "172.20.0.4"
     },
     "adBDCNICIPAddress": {
       "type": "string",
       "metadata": {
         "description": "The IP address of the new backup AD VM"
       },
-      "defaultValue": "10.0.0.5"
+      "defaultValue": "172.20.0.5"
     },
     "sqlLBIPAddress": {
       "type": "string",
       "metadata": {
         "description": "The IP address of the new SQL Server Internal Load Balancer"
       },
-      "defaultValue": "10.0.1.9"
+      "defaultValue": "172.20.1.9"
     },
     "deploymentPrefix": {
       "type": "string",
