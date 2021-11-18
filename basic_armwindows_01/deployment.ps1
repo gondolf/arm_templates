@@ -2,8 +2,8 @@ param (
     [Parameter(Mandatory = $false)] [String]  $TenantId = "00193bc8-dddd-41dd-8c93-264763bc0348",
     [Parameter(Mandatory = $false)] [String]  $Subscriptionid = "d9bc6363-1579-4256-8ac0-7686697ffdb4",
     [Parameter(Mandatory = $false)] [String]  $ResourceGroupName = 'RGSQLAllwaysOn',
-    [Parameter(Mandatory = $false)] [string]  $TemplateFile = "./azuredeployNewVM-WinAvSet.json",
-    [Parameter(Mandatory = $false)] [String]  $TemplateParameterFile = "./azuredeploy.parameters.json",
+    [Parameter(Mandatory = $false)] [string]  $TemplateFile = "./azuredeploysinglevm.json",
+    [Parameter(Mandatory = $false)] [String]  $TemplateParameterFile = "./azuredeploysinglvevm.parameters.json",
     [Parameter(Mandatory = $false)] [switch]  $WhatIf 
 )
 
