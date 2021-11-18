@@ -40,11 +40,12 @@
         },
         "imageSKU": {
             "type": "string",
-            "defaultValue": "2019-Datacenter",
+            "defaultValue": "Enterprise",
             "allowedValues": [
                 "2012-R2-Datacenter",
                 "2016-Datacenter",
-                "2019-Datacenter"
+                "2019-Datacenter",
+                "Enterprise"
             ],
             "metadata": {
                 "description": "Image SKU"
@@ -98,8 +99,8 @@
         }
     },
     "variables": {
-        "imagePublisher": "MicrosoftWindowsServer",
-        "imageOffer": "WindowsServer",
+        "imagePublisher": "MicrosoftSQLServer",
+        "imageOffer": "sql2017-ws2019",
         "nicNameprefix": "aznic",
         "correlative": "01",
         "subnetRef": "[resourceId(parameters('existingresourcegroupVirtualNetwork'),'Microsoft.Network/virtualNetworks/subnets', parameters('existingvirtualNetworkName'), parameters('existingsubnetName'))]",
@@ -181,7 +182,7 @@
                     },
                     "osDisk": {
                         "name": "[concat(parameters('vmName')[copyIndex()],'_OSDisk')]",
-                        "managedDisk": { "storageAccountType": "Standard_LRS" },
+                        "managedDisk": { "storageAccountType": "StandardSSD_LRS" },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
                     },

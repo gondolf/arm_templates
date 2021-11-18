@@ -2,9 +2,10 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "VMName": {
+    "VMName": { 
       "value": [
-        "j6-prd-web4-ec"
+        "j6-tst-sql1-ec",
+        "j6-tst-sql2-ec"
       ]
     },
     "adminUsername": {
@@ -17,7 +18,7 @@
       "value": "arsgrinfeu1p01"
     },
     "existingsubnetName": {
-      "value": "asnetwebprd01"
+      "value": "asnetdatprd01"
     },
     "existingBootDiagnostic": {
       "value": "vdiagyecj6eu1prd01"
@@ -26,16 +27,16 @@
       "value": "DY3ytqZ3wmiCLJh7"
     },
     "diskType": {
-      "value": "StandardSSD_LRS"
+      "value": "Premium_LRS"
     },
     "vmSize": {
-      "value": "Standard_D8s_v4"
+      "value": "Standard_D2as_v4"
     },
     "DataDiskSize": {
       "value": 128
     },
     "AvailabilitySetName": {
-      "value": "avsetyecwj6prd01"
+      "value": "avsetyecdj6prd02"
     }
   }
 }
