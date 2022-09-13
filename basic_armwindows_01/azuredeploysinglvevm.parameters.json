@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VMName": {
+        "value":   "j6-dec-db-ec"
+      },
+      "adminUsername": {
+        "value": "kndadmin"
+      },
+      "existingvirtualNetworkName": {
+        "value": "avnetyeceu1dec01"
+      },
+      "existingresourcegroupVirtualNetwork": {
+        "value": "arsgrinfeu1p01"
+      },
+      "existingsubnetName": {
+        "value": "asnetdatdec01"
+      },
+      "existingBootDiagnostic": {
+        "value": "vdiagyecj6eu1dec01"
+      },
+      "adminPasswordOrKey": {
+        "value": "DY3ytqZ3wmiCLJh7"
+      },
+      "diskType": {
+        "value": "StandardSSD_LRS"
+      },
+      "vmSize": {
+        "value": "Standard_F8s_v2"
+      },
+      "DataDiskSize": {
+        "value": 128
+      }
+    }
+  }

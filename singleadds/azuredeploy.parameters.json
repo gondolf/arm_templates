@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "existingCustomScriptStorageAccountResourcegroup": {
+      "value": "arsgrycoinfeastusprd01"
+    },    
+    "existingCustomScriptStorageAccountName": {
+      "value": "staccycoinfeastusprd01"
+    },    
+    "existingvirtualNetworkName": {
+      "value": "avnetyeceu1uat01"
+    },
+    "existingVirtualNetworkresourcegroup": {
+      "value": "arsgrycoinfeastusprd01"
+    },
+    "existingsubnetName": {
+      "value": "asnetwebuat01" 
+    },
+    "existingBootDiagnostic": {
+      "value": "vdiagyecj6eu1prd02"
+    },        
+    "adminUsername": {
+      "value": "kndadmin"
+    },
+    "adminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/964df7ca-3ba4-48b6-a695-1ed9db5723f8/resourceGroups/1-99e8c8c0-playground-sandbox/providers/Microsoft.KeyVault/vaults/demogeeadds01"
+        },
+          "secretName": "kndadmin"
+      }
+    },
+    "domainName": {
+      "value": "corp.geedomain01.com"
+    },
+    "dnsPrefix": {
+      "value": "geedomain01"
+    },
+    "_artifactsLocation": {
+        "value": "https://demogeead01.blob.core.windows.net/scripts"
+    },
+    "_artifactsLocationSasToken": {
+        "value": "?sv=2021-06-08&ss=b&srt=sco&sp=rwdlaciytfx&se=2022-09-13T09:29:01Z&st=2022-09-13T01:29:01Z&spr=https&sig=Fmhy%2FcN09akWk8Ezh%2Bz9bzRRE5nsoQZqOL%2BhKvVT%2BUU%3D"
+    }
+  }
+}
