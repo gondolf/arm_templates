@@ -1,5 +1,20 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "metadata": {
+        "name": "DeployActiveDirectoryDomain",
+        "summary": "Deploy a new Active directory Domain with a single domain controller",
+        "description": [
+            "#This template will create a single domain controller, with the following requirements:",
+            "1. Domain admin password must be recorded in an azure keyvault",
+            "2. An Storage Account with the DSC script must exists",
+            "# This template  has the following features:",
+            "1. Static IP Address for Network Interface",
+            "2. ADDS Application is deployed in a Data Disk",
+            "3. the VM is part of an Availability Set",
+            "4. Custom Script Extension",
+            "5. DNS from virtual network are updated with the domain controller IP Address"
+        ]
+    },
     "contentVersion": "1.0.0.0",
     "parameters": {
         "adminUsername": {
@@ -204,7 +219,17 @@
             "metadata": {
                 "description": "Resource Group Name, which contains the Storage account used for CustomScript."
             }
+        },
+        "urltemplatespath": {
+            "type": "string",
+            "metadata": {
+                "description": "URL Path for Nested ARM templates"
+            }
         }
+    },
+    "variables": {
+        "urlvnettemplate": "[concat(parameters('urltemplatespath'),'vnet.json')]",
+        "urlvnetwithdnstemplate": "[concat(parameters('urltemplatespath'),'vnet-with-dns-server.json')]"
     },
     "resources": [
         {
@@ -239,7 +264,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/Azure/AzureStack-QuickStart-Templates/master/active-directory-new-domain/nestedtemplates/vnet.json",
+                    "uri": "[variables('urlvnettemplate')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -437,7 +462,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/Azure/AzureStack-QuickStart-Templates/master/active-directory-new-domain/nestedtemplates/vnet-with-dns-server.json",
+                    "uri": "[variables('urlvnetwithdnstemplate')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
